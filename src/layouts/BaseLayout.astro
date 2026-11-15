@@ -1,0 +1,48 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import FloatKefu from '../components/FloatKefu.astro';
+
+const {
+  title = '网络建站公司',
+  keywords = '网络公司网站,建站公司网',
+  description = '网络建站公司',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <meta name="applicable-device" content="pc,wap" />
+    <meta name="MobileOptimized" content="width" />
+    <meta name="HandheldFriendly" content="true" />
+    <title>{title}</title>
+    <meta name="keywords" content={keywords} />
+    <meta name="description" content={description} />
+    <meta name="author" content="" />
+    <link rel="stylesheet" href="/static/css/animate.min.css" />
+    <link rel="stylesheet" href="/static/css/swiper.min.css" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <script is:inline src="/static/js/jquery.min.js"></script>
+    <script is:inline src="/static/js/wow.min.js"></script>
+    <script is:inline src="/static/js/swiper.min.js"></script>
+    <script is:inline src="/static/js/style.js"></script>
+  </head>
+  <body>
+    <!-- 1. 公共顶部与导航 -->
+    <Nav />
+
+    <!-- 2. 页面独有的中间正文插槽 -->
+    <slot />
+
+    <!-- 3. 公共底部与在线客服 -->
+    <Footer />
+    <FloatKefu />
+  </body>
+</html>

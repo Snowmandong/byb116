@@ -1,0 +1,97 @@
+<!--在线客服-->
+<div class="kf">
+  <div class="kt-top">
+    在线客服 <span class="close"> <b></b> <b></b> </span>
+  </div>
+  <div class="con">
+    <ul class="qq">
+      <li>
+        <a
+          class="IM-item-link IM-qq"
+          target="_blank"
+          rel="nofollow"
+          href="http://wpa.qq.com/msgrd?v=3&uin=250801208&site=qq&menu=yes"
+        >
+          <img
+            border="0"
+            src="/static/picture/qq.png"
+            alt="点击这里给我发消息"
+            align="absmiddle"
+            onerror="$(this).hide()"
+          />
+          客服1
+        </a>
+      </li>
+      <li>
+        <a
+          class="IM-item-link IM-ali"
+          rel="nofollow"
+          target="_blank"
+          href="http://wpa.qq.com/msgrd?v=3&uin=250801208&site=qq&menu=yes"
+        >
+          <img
+            border="0"
+            src="/static/picture/qq.png"
+            alt="点击这里给我发消息"
+            align="absmiddle"
+          />
+          客服2
+        </a>
+      </li>
+    </ul>
+    <h5>联系方式</h5>
+    <div class="contact">
+      <p>热线电话</p>
+      <p>19903970011</p>
+      <p>上班时间</p>
+      <p>周一到周五</p>
+      <p>公司电话</p>
+      <p>19903970011</p>
+    </div>
+    <h5 class="qr-icon">二维码</h5>
+    <div class="qr">
+      <img src="/static/picture/1752640585308216.png" alt="微信" />
+    </div>
+  </div>
+  <div class="kf-side">
+    <b>在</b><b>线</b><b>客</b><b>服</b> <span class="arrow"></span>
+  </div>
+  <div class="backTop"></div>
+</div>
+<script is:inline src="/static/js/countto.js"></script>
+<script is:inline>
+  var banner = new Swiper(".banner", {
+    autoplay: true,
+    loop: true,
+    navigation: {
+      prevEl: ".banner .swiper-button-prev",
+      nextEl: ".banner .swiper-button-next",
+    },
+    pagination: {
+      el: ".banner .swiper-pagination",
+      clickable: true,
+    },
+    on: {
+      init: function (swiper) {
+        var slide = this.slides.eq(0);
+        slide.addClass("ani-slide");
+      },
+      transitionStart: function () {
+        for (i = 0; i < this.slides.length; i++) {
+          var slide = this.slides.eq(i);
+          slide.removeClass("ani-slide");
+        }
+      },
+      transitionEnd: function () {
+        var slide = this.slides.eq(this.activeIndex);
+        slide.addClass("ani-slide");
+      },
+    },
+  });
+
+  $(".timer").each(function () {
+    $(this).countTo();
+  });
+
+  tabsSwiper(".index-news-menu", ".index-news-con");
+</script>
