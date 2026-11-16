@@ -1,5 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { newsList } from '../data/newsData.js';
+
+// 自动按分类筛选首页展示的新闻列表
+const gongsiNews = newsList.filter((item) => item.category === '公司新闻').slice(0, 8);
+const hangyeNews = newsList.filter((item) => item.category === '行业新闻').slice(0, 8);
+const zhishiNews = newsList.filter((item) => item.category === '建站知识').slice(0, 6);
 ---
 
 <BaseLayout title="网络建站公司-买余" keywords="网络公司网站,建站公司网" description="网络建站公司">
@@ -313,6 +319,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </ul>
   </div>
 
+  <!-- 新闻资讯（自动从 newsData.js 按分类渲染） -->
   <div class="section">
     <div class="container">
       <div class="section-title">
@@ -326,225 +333,63 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </ul>
       <div class="swiper-container index-news-con">
         <div class="swiper-wrapper">
+          <!-- 选项卡 1：公司新闻 -->
           <div class="swiper-slide">
             <div class="img-center">
               <img src="/static/picture/1752749964379171.jpg" alt="公司新闻" />
             </div>
             <ul class="list-2">
-              <li>
-                <a href="/news/47.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>为您的企业在社交媒体上发布什么</h4>
-                    <p>通常，在管理社交账户时，最困难的部分是知道在社交媒体上发布什么信息。你经常会觉得···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/46.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>如何进行市场调查：你真正需要知道的</h4>
-                    <p>影响你的购买决定，你的买家是谁，以及你的特定市场最成功。本质上，你需要了解谁真正···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/45.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>您的内部指南：什么是竞争环境分析？</h4>
-                    <p>在本文中，您将了解什么是竞争环境分析，为什么它是必要的，以及如何进行竞争环境分析···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/44.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>想进行竞争分析吗？以下是你应该做的7个理由</h4>
-                    <p>你想进行竞争分析，以更好地了解竞争对手，推出新产品，甚至获得更多关于营销策略的想···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/43.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>什么是网站策略？为什么你需要它以及你如何做到</h4>
-                    <p>网站是您企业营销和销售成功的重要组成部分，但您如何开始，如何构建符合您的营销和业···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/42.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>微观和宏观影响者：如何工作</h4>
-                    <p>营销的形式正在改变。如果最初我们信任广告，现在我们信任谈论不同类型产品的影响者。···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/31.html">
-                  <div class="date"><strong>16</strong>2025-07</div>
-                  <div class="text">
-                    <h4>如何进行竞争性定价分析</h4>
-                    <p>重要的是要记住，我们在这里的使命是提供一种产品或服务，可以在竞争中获得竞争优势，···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/30.html">
-                  <div class="date"><strong>16</strong>2025-07</div>
-                  <div class="text">
-                    <h4>如何制定营销策略：你需要知道的一切</h4>
-                    <p>一个精心调整的营销策略可以让你的品牌获得成功。尽管制定营销策略的原则保持不变，但···</p>
-                  </div>
-                </a>
-              </li>
+              {gongsiNews.map((item) => (
+                <li>
+                  <a href={`/news/${item.id}.html`}>
+                    <div class="date"><strong>{item.day}</strong>{item.yearMonth}</div>
+                    <div class="text">
+                      <h4>{item.title}</h4>
+                      <p>{item.summary}</p>
+                    </div>
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
+          <!-- 选项卡 2：行业新闻 -->
           <div class="swiper-slide">
             <div class="img-center">
               <img src="/static/picture/1752751531852941.jpg" alt="行业新闻" />
             </div>
             <ul class="list-2">
-              <li>
-                <a href="/news/55.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>如何制定营销策略：你需要知道的一切</h4>
-                    <p>一个精心调整的营销策略可以让你的品牌获得成功。尽管制定营销策略的原则保持不变，但···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/54.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>如何进行竞争性定价分析</h4>
-                    <p>重要的是要记住，我们在这里的使命是提供一种产品或服务，可以在竞争中获得竞争优势，···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/53.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>微观和宏观影响者：如何工作</h4>
-                    <p>营销的形式正在改变。如果最初我们信任广告，现在我们信任谈论不同类型产品的影响者。···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/52.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>什么是网站策略？为什么你需要它以及你如何做到</h4>
-                    <p>网站是您企业营销和销售成功的重要组成部分，但您如何开始，如何构建符合您的营销和业···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/51.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>想进行竞争分析吗？以下是你应该做的7个理由</h4>
-                    <p>你想进行竞争分析，以更好地了解竞争对手，推出新产品，甚至获得更多关于营销策略的想···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/50.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>您的内部指南：什么是竞争环境分析？</h4>
-                    <p>在本文中，您将了解什么是竞争环境分析，为什么它是必要的，以及如何进行竞争环境分析···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/49.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>如何进行市场调查：你真正需要知道的</h4>
-                    <p>影响你的购买决定，你的买家是谁，以及你的特定市场最成功。本质上，你需要了解谁真正···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/48.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>为您的企业在社交媒体上发布什么</h4>
-                    <p>通常，在管理社交账户时，最困难的部分是知道在社交媒体上发布什么信息。你经常会觉得···</p>
-                  </div>
-                </a>
-              </li>
+              {hangyeNews.map((item) => (
+                <li>
+                  <a href={`/news/${item.id}.html`}>
+                    <div class="date"><strong>{item.day}</strong>{item.yearMonth}</div>
+                    <div class="text">
+                      <h4>{item.title}</h4>
+                      <p>{item.summary}</p>
+                    </div>
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
+          <!-- 选项卡 3：建站知识 -->
           <div class="swiper-slide">
             <div class="img-center">
               <img src="/static/picture/1752752027915855.jpg" alt="建站知识" />
             </div>
             <ul class="list-2">
-              <li>
-                <a href="/news/61.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>您的内部指南：什么是竞争环境分析？</h4>
-                    <p>在本文中，您将了解什么是竞争环境分析，为什么它是必要的，以及如何进行竞争环境分析···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/60.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>想进行竞争分析吗？以下是你应该做的7个理由</h4>
-                    <p>你想进行竞争分析，以更好地了解竞争对手，推出新产品，甚至获得更多关于营销策略的想···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/59.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>什么是网站策略？为什么你需要它以及你如何做到</h4>
-                    <p>网站是您企业营销和销售成功的重要组成部分，但您如何开始，如何构建符合您的营销和业···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/58.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>微观和宏观影响者：如何工作</h4>
-                    <p>营销的形式正在改变。如果最初我们信任广告，现在我们信任谈论不同类型产品的影响者。···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/57.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>如何进行竞争性定价分析</h4>
-                    <p>重要的是要记住，我们在这里的使命是提供一种产品或服务，可以在竞争中获得竞争优势，···</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="/news/56.html">
-                  <div class="date"><strong>18</strong>2025-07</div>
-                  <div class="text">
-                    <h4>如何制定营销策略：你需要知道的一切</h4>
-                    <p>一个精心调整的营销策略可以让你的品牌获得成功。尽管制定营销策略的原则保持不变，但···</p>
-                  </div>
-                </a>
-              </li>
+              {zhishiNews.map((item) => (
+                <li>
+                  <a href={`/news/${item.id}.html`}>
+                    <div class="date"><strong>{item.day}</strong>{item.yearMonth}</div>
+                    <div class="text">
+                      <h4>{item.title}</h4>
+                      <p>{item.summary}</p>
+                    </div>
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
