@@ -4,9 +4,6 @@ import { newsList } from '../data/newsData.js';
 
 // 左侧推荐栏：自动取前 4 篇“建站知识”
 const sideRecommend = newsList.filter((item) => item.category === '建站知识').slice(0, 4);
-
-// 右侧主列表：自动展示前 10 篇最新新闻
-const mainNewsList = newsList.slice(0, 10);
 ---
 
 <BaseLayout
@@ -41,44 +38,176 @@ const mainNewsList = newsList.slice(0, 10);
       </ul>
 
       <div class="v-main">
-        <ul class="h-lanmu">
-          <li><a href="/news.html">公司新闻</a></li>
-          <li><a href="/news.html">行业新闻</a></li>
-          <li><a href="/news.html">建站知识</a></li>
+        <!-- 顶部分类筛选栏（支持点击无刷新切换） -->
+        <ul class="h-lanmu" id="news-category-tabs">
+          <li class="active"><a href="javascript:;" data-cat="all">全部资讯</a></li>
+          <li><a href="javascript:;" data-cat="公司新闻">公司新闻</a></li>
+          <li><a href="javascript:;" data-cat="行业新闻">行业新闻</a></li>
+          <li><a href="javascript:;" data-cat="建站知识">建站知识</a></li>
         </ul>
 
-        <!-- 右侧新闻主列表（自动循环渲染） -->
-        <ul class="list-3">
-          {mainNewsList.map((item) => (
-            <li>
+        <!-- 右侧新闻主列表（全部输出以保障SEO，超过首屏数量的部分默认隐藏，随滚动渐进展开） -->
+        <ul class="list-3" id="news-waterfall-list">
+          {newsList.map((item, index) => (
+            <li
+              class="news-card-item"
+              data-category={item.category}
+              style={index >= 8 ? 'display: none;' : ''}
+            >
               <a href={`/news/${item.id}.html`}>
                 <div class="img-center">
                   <img
                     src={item.img}
                     alt={item.title}
+                    loading="lazy"
                   />
                 </div>
                 <div class="text">
                   <h4>{item.title}</h4>
                   <p>{item.summary}</p>
-                  <span>日期：{item.date}</span>
+                  <span>日期：{item.date} &nbsp;|&nbsp; 分类：{item.category}</span>
                 </div>
               </a>
             </li>
           ))}
         </ul>
 
-        <div class="pagebar">
-          <div class="pagination">
-            <a class="page-item page-link hidden-sm" href="/news.html" title="首页">首页</a>
-            <a class="page-item page-link st" href="javascript:;" title="上一页">&lt;&lt;</a>
-            <a href="/news.html" class="page-num page-num-current">1</a>
-            <a class="page-item page-link" href="javascript:;" title="当前页/总页数">1/1</a>
-            <a class="page-item page-link st" href="javascript:;" title="下一页">&gt;&gt;</a>
-            <a class="page-item page-link hidden-sm" href="/news.html" title="尾页">尾页</a>
-          </div>
+        <!-- 瀑布流底部自动加载触发器与状态提示 -->
+        <div id="load-more-sentinel" class="load-more-status">
+          <span id="load-more-text">正在加载更多资讯...</span>
         </div>
       </div>
     </div>
   </div>
+
+  <script is:inline>
+    (function () {
+      var INITIAL_COUNT = 8; // 首次打开页面默认显示的条数
+      var LOAD_STEP = 6;     // 每次下滑到底部追加显示的条数
+      var currentCategory = 'all';
+      var visibleCount = INITIAL_COUNT;
+      var isLoading = false;
+
+      var allItems = Array.prototype.slice.call(
+        document.querySelectorAll('#news-waterfall-list .news-card-item')
+      );
+      var statusText = document.getElementById('load-more-text');
+      var sentinel = document.getElementById('load-more-sentinel');
+      var tabLinks = document.querySelectorAll('#news-category-tabs a');
+
+      // 根据当前选中的分类，获取匹配的所有文章节点
+      function getFilteredItems() {
+        return allItems.filter(function (el) {
+          if (currentCategory === 'all') return true;
+          return el.getAttribute('data-category') === currentCategory;
+        });
+      }
+
+      // 渲染当前应该显示的文章
+      function renderList() {
+        var matched = getFilteredItems();
+
+        allItems.forEach(function (el) {
+          el.style.display = 'none';
+        });
+
+        matched.slice(0, visibleCount).forEach(function (el) {
+          el.style.display = '';
+          el.classList.add('fade-in-item');
+        });
+
+        if (matched.length === 0) {
+          statusText.innerText = '暂无该分类资讯';
+        } else if (visibleCount >= matched.length) {
+          statusText.innerText = '— 已加载全部 ' + matched.length + ' 条资讯 —';
+        } else {
+          statusText.innerText = '下滑加载更多资讯...';
+        }
+      }
+
+      // 触发加载下一批
+      function loadNextBatch() {
+        var matched = getFilteredItems();
+        if (isLoading || visibleCount >= matched.length) return;
+
+        isLoading = true;
+        statusText.innerText = '正在加载更多资讯...';
+
+        setTimeout(function () {
+          visibleCount += LOAD_STEP;
+          renderList();
+          isLoading = false;
+        }, 300);
+      }
+
+      // 绑定顶部分类点击切换事件
+      for (var i = 0; i < tabLinks.length; i++) {
+        tabLinks[i].addEventListener('click', function (e) {
+          e.preventDefault();
+          var parentLi = this.parentElement;
+          var siblings = parentLi.parentElement.children;
+          for (var j = 0; j < siblings.length; j++) {
+            siblings[j].classList.remove('active');
+          }
+          parentLi.classList.add('active');
+
+          currentCategory = this.getAttribute('data-cat') || 'all';
+          visibleCount = INITIAL_COUNT;
+          renderList();
+        });
+      }
+
+      // 使用 IntersectionObserver 监听底部滚动自动加载
+      if ('IntersectionObserver' in window && sentinel) {
+        var observer = new IntersectionObserver(
+          function (entries) {
+            if (entries[0].isIntersecting) {
+              loadNextBatch();
+            }
+          },
+          { rootMargin: '120px' }
+        );
+        observer.observe(sentinel);
+      } else {
+        // 兼容老旧浏览器的滚动监听
+        window.addEventListener('scroll', function () {
+          if (!sentinel) return;
+          var rect = sentinel.getBoundingClientRect();
+          if (rect.top < window.innerHeight + 120) {
+            loadNextBatch();
+          }
+        });
+      }
+
+      // 初始化首次渲染状态
+      renderList();
+    })();
+  </script>
 </BaseLayout>
+
+<style>
+  .load-more-status {
+    text-align: center;
+    padding: 25px 0 15px;
+    color: #888888;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  .h-lanmu li.active a {
+    background-color: #e60012;
+    color: #ffffff;
+  }
+  .fade-in-item {
+    animation: fadeInUpNews 0.35s ease-out;
+  }
+  @keyframes fadeInUpNews {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

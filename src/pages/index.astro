@@ -5,7 +5,7 @@ import { newsList } from '../data/newsData.js';
 // 自动按分类筛选首页展示的新闻列表
 const gongsiNews = newsList.filter((item) => item.category === '公司新闻').slice(0, 8);
 const hangyeNews = newsList.filter((item) => item.category === '行业新闻').slice(0, 8);
-const zhishiNews = newsList.filter((item) => item.category === '建站知识').slice(0, 6);
+const zhishiNews = newsList.filter((item) => item.category === '建站知识').slice(0, 8);
 ---
 
 <BaseLayout title="网络建站公司-买余" keywords="网络公司网站,建站公司网" description="网络建站公司">
