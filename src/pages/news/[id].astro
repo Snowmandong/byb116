@@ -1,0 +1,177 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { newsList } from '../../data/newsData.js';
+
+export function getStaticPaths() {
+  return newsList.map((item, index) => {
+    const prevItem = index > 0 ? newsList[index - 1] : null;
+    const nextItem = index < newsList.length - 1 ? newsList[index + 1] : null;
+    return {
+      params: { id: item.id },
+      props: { newsItem: item, prevItem, nextItem },
+    };
+  });
+}
+
+const { newsItem, prevItem, nextItem } = Astro.props;
+// 左侧推荐栏固定取前 4 篇建站知识
+const sideRecommend = newsList.slice(0, 4);
+---
+
+<BaseLayout
+  title={`${newsItem.title}-${newsItem.category}-网络建站公司`}
+  keywords={`${newsItem.category},网络公司网站,建站公司网`}
+  description={newsItem.summary}
+>
+  <div
+    class="banner-sub"
+    style="background-image: url(/static/images/news.jpg)"
+  >
+  </div>
+
+  <!--当前位置-->
+  <div class="position">
+    <div class="container">
+      <i></i>当前位置：<a href="/">首页</a> &gt;&gt;
+      <a href="/news.html">新闻资讯</a> &gt;&gt;
+      <span>{newsItem.title}</span>
+    </div>
+  </div>
+
+  <div class="section-sub" style="background-color: #f8f8f8">
+    <div class="container clearfix">
+      <!-- 左侧推荐栏（与 news.astro 保持一致） -->
+      <ul class="v-lanmu">
+        {sideRecommend.map((item) => (
+          <li>
+            <a href={`/news/${item.id}.html`}>
+              <strong>{item.title}</strong>{item.category}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <!-- 右侧新闻详情主体 -->
+      <div class="v-main">
+        <div class="news-detail-card">
+          <h1 class="news-detail-title">{newsItem.title}</h1>
+          <div class="news-detail-meta">
+            <span>分类：{newsItem.category}</span>
+            <span>发布日期：{newsItem.date}</span>
+            <span>来源：河南买余电子科技有限公司</span>
+          </div>
+
+          <div class="news-detail-body">
+            {newsItem.content.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+          </div>
+
+          <div class="news-detail-nav">
+            <div class="nav-item">
+              上一篇：
+              {prevItem ? (
+                <a href={`/news/${prevItem.id}.html`}>{prevItem.title}</a>
+              ) : (
+                <span>没有了</span>
+              )}
+            </div>
+            <div class="nav-item">
+              下一篇：
+              {nextItem ? (
+                <a href={`/news/${nextItem.id}.html`}>{nextItem.title}</a>
+              ) : (
+                <span>没有了</span>
+              )}
+            </div>
+            <div class="back-btn-wrap">
+              <a href="/news.html" class="back-news-btn">返回新闻列表</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .news-detail-card {
+    background-color: #ffffff;
+    padding: 35px 40px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  }
+  .news-detail-title {
+    font-size: 24px;
+    color: #333333;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.5;
+    margin: 0 0 15px 0;
+  }
+  .news-detail-meta {
+    text-align: center;
+    font-size: 13px;
+    color: #888888;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+    border-bottom: 1px dashed #e5e5e5;
+  }
+  .news-detail-meta span {
+    margin: 0 12px;
+    display: inline-block;
+  }
+  .news-detail-body {
+    font-size: 16px;
+    line-height: 1.9;
+    color: #444444;
+  }
+  .news-detail-body p {
+    margin-bottom: 20px;
+    text-indent: 2em;
+    text-align: justify;
+  }
+  .news-detail-nav {
+    margin-top: 35px;
+    padding-top: 20px;
+    border-top: 1px solid #eeeeee;
+    font-size: 14px;
+    color: #666666;
+    line-height: 2;
+  }
+  .news-detail-nav a {
+    color: #333333;
+    transition: color 0.2s;
+  }
+  .news-detail-nav a:hover {
+    color: #e60012;
+  }
+  .back-btn-wrap {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .back-news-btn {
+    display: inline-block;
+    padding: 8px 28px;
+    background-color: #f5f5f5;
+    color: #333333 !important;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  .back-news-btn:hover {
+    background-color: #e60012;
+    color: #ffffff !important;
+  }
+  @media (max-width: 767px) {
+    .news-detail-card {
+      padding: 20px 15px;
+    }
+    .news-detail-title {
+      font-size: 19px;
+    }
+    .news-detail-meta span {
+      margin: 0 6px;
+    }
+  }
+</style>
